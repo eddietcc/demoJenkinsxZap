@@ -101,8 +101,12 @@ pipeline {
       
         stage('Copy report from zap container to external folder') {
             steps {
-                sh "mkdir ${env.JENKINS_HOME}/zapReport"
-                sh "docker cp owaspzap:/zap/wrk/report.html ${env.JENKINS_HOME}/zapReport/report_${env.BUILD_ID}.html"
+                script{
+                    if (! fileExists("${env.JENKINS_HOME}/zapReport")){
+                        sh "mkdir ${env.JENKINS_HOME}/zapReport"
+                    }
+                    sh "docker cp owaspzap:/zap/wrk/report.html ${env.JENKINS_HOME}/zapReport/report_${env.BUILD_ID}.html"
+                }
             }
         }
     }
